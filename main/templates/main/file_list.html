@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        li:last-child {
+            margin-bottom: 0;
+        }
+        .file-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .file-actions {
+            margin-top: 10px;
+        }
+        .file-actions a, .file-actions button {
+            text-decoration: none;
+            color: #007bff;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .file-actions a:hover, .file-actions button:hover {
+            text-decoration: underline;
+        }
+        .link {
+            display: block;
+            margin-top: 10px;
+            text-align: center;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Uploaded Files</h1>
+    <ul>
+        {% for file in files %}
+            <li>
+                <div class="file-info">
+                    <div>
+                        <strong>{{ file.file_name }}</strong> - {{ file.description }} - {{ file.file }} - ({{ file.upload_date }})
+                    </div>
+                    <div class="file-actions">
+                        <a href="{% url 'download_file' file.id %}">Download</a>
+                        <a href="{% url 'update_file_entry' file.id %}">Edit</a>
+                        <form method="post" action="{% url 'delete_file_entry' file.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="file_id" value="{{ file.id }}">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </li>
+        {% empty %}
+            <li>No files uploaded yet.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'home' %}"  class="link">Home</a>
+</body>
+</html>
